@@ -72,7 +72,11 @@ class PY_data :
     SORT_MAP_FILE = '.BB_sortinfo'
     DIR_DICT_NAME = 'DIR'
     VIDEO_DICT_NAME = 'VIDEO'
-    FIXED_PY_MAP = (('#', '0'), ('【', '1'), )
+    SORT_CUSTOM_LEVEL_1 = ('#', '0')
+    SORT_CUSTOM_LEVEL_2 = ('【', '1')
+    SORT_CUSTOM_LEVEL_3_ENG = '2'
+    SORT_CUSTOM_LEVEL_CHS = '7'
+    #FIXED_PY_MAP = (('#', '0'), ('【', '1'), )
     #PY_LENGTH = 3
     PY_LENGTH = 0       #取全部长度
     def __init__(self, path) -> None :
@@ -131,6 +135,16 @@ class PY_data :
                 input = dir
             else :
                 input = dir[:PY_data.PY_LENGTH]
+            
+            if input[0] == PY_data.SORT_CUSTOM_LEVEL_1[0] :
+                input = PY_data.SORT_CUSTOM_LEVEL_1[1] + input
+            elif input[0] == PY_data.SORT_CUSTOM_LEVEL_2[0] :
+                input = PY_data.SORT_CUSTOM_LEVEL_2[1] + input
+            elif pinyin_info.is_eng_ascii(input[0]) :
+                input = PY_data.SORT_CUSTOM_LEVEL_3_ENG + input
+            else :
+                input = PY_data.SORT_CUSTOM_LEVEL_CHS + input
+            '''
             if pinyin_info.is_eng_ascii(input[0]) :     #第一个为ascii字符
                 input = '2' + input
             else :
@@ -138,7 +152,8 @@ class PY_data :
                     if input[0] == fp[0] :
                         input = fp[1] + input[1:]
                         break
-            py = pinyin_info.get_fixed_PINYIN(input, PY_data.PY_LENGTH)
+            '''
+            py = pinyin_info.get_fixed_PINYIN(input, PY_data.PY_LENGTH, FIRST_SORTED=True)
             #logging.info('the PY of dir{} is ({}).'.format(dir, py))
             info_dict = dict()
             info_dict['sorttitle'] = py

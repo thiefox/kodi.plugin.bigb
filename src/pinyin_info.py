@@ -229,12 +229,17 @@ def _season_adjust(input : str) -> str :
     return output
 
 #取得固定长度的拼音缩写, fix_len=0为取全部长度
-def get_fixed_PINYIN(data : str, fix_len : int) -> str :
+#首字母是否更高层面已排序
+def get_fixed_PINYIN(data : str, fix_len : int, FIRST_SORTED=False) -> str :
     FULL_WITH = '0'
     fixed = ''
     if data == '' :
         return ''
     assert(fix_len >= 0)
+    first = ''
+    if FIRST_SORTED :
+        first = data[0]
+        data = data[1:]
     sn = rip_season_num(data)   #检查是否季目录
     if sn >= 0 :
         fixed = 'D' + str(sn) + 'J'
@@ -247,10 +252,13 @@ def get_fixed_PINYIN(data : str, fix_len : int) -> str :
             fixed = PY[ : fix_len]
         else :
             fixed = PY.ljust(fix_len, FULL_WITH)
+    if FIRST_SORTED :
+        fixed = first + fixed
     return fixed
 
 def test_py_sort() :
-    INFOS = ('第0季', '第二季.2021', '第三季', '第一季.2019', '第几个季节才会这样.1984', )
+    #INFOS = ('第0季', '第二季.2021', '第三季', '第一季.2019', '第几个季节才会这样.1984', )
+    INFOS = ('3第1名', '3好汉罗宾逊', '第三季', '2第几个季节才会这样.1984', )
     for info in INFOS :
         py = get_fixed_PINYIN(info, 0)
         print('data={}, py={}.'.format(info, py))
