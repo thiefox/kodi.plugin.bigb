@@ -128,7 +128,7 @@ class vfs_wrapper :
         if xbmcvfs.exists(file) :
             pics['fanart'] = file
         return pics
-    def get_episode_pics(path_video : str) -> dict :
+    def get_episode_pics(path_video : str, s_serial : int) -> dict :
         pics = dict()
         path_pure = os.path.splitext(path_video)[0]
         file = path_pure + '-thumb.jpg'
@@ -151,6 +151,23 @@ class vfs_wrapper :
                     file = os.path.join(path_parent, 'logo.jpg')
                     if xbmcvfs.exists(file) :
                         pics['clearlogo'] = file
+
+        if s_serial >= 0 :
+            info = ''
+            if s_serial == 0 :
+                info = 'season-specials'
+            elif s_serial < 10 :
+                info = 'season0' + str(s_serial)
+            else :
+                info = 'season' + str(s_serial)
+
+            file = os.path.join(path_parent, info + '-fanart.jpg')
+            if xbmcvfs.exists(file) :
+                pics['fanart'] = file
+            file = os.path.join(path_parent, info + '-poster.jpg')
+            if xbmcvfs.exists(file) :
+                pics['fanart'] = file
+
 
         return pics        
 

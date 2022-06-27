@@ -7,6 +7,7 @@ import re
 import string
 
 DIGITAL_MAP = (('一', '1'), ('二', '2'), ('三', '3'), ('四', '4'), ('五', '5'), ('六', '6'), ('七', '7'), ('八', '8'), ('九', '9'), ('十', 'a'), )
+EPISODE_FORMAT = r'(S\d{2}E\d{2})'
 
 def is_eng_ascii(c : str) -> bool :
     #return ord(c) < 127 and c in string.printable
@@ -43,6 +44,21 @@ def chs_to_digital(chn : str) -> int :
     elif idx_w != -1:
         return _trans(chn[:idx_w]) * num_w + _trans(chn[idx_w + 1:])
     return _trans(chn)
+
+#返回剧集文件的剧集信息元组，如（1，5），（0，3）。无法获取为None
+def rip_se_info(file_episode) :
+    se_info = None
+    ep_info = re.search(EPISODE_FORMAT, file_episode, re.I)
+    if ep_info is not None :
+        info = ep_info.group().upper()
+        if len(info) == 6 :
+            try :
+                ss = int(info[1:3])
+                es = int(info[4:])
+                se_info = (ss, es)
+            except :
+                pass
+    return se_info
 
 #解析季号，支持S01, S01.1984, 第1季，第一季格式。
 def rip_season_num(dir_name : str) -> int :

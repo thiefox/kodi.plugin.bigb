@@ -434,7 +434,12 @@ class PY_sort_file_system :
                 if root_type == 1 :     #电影目录下的视频
                     pics = vfs_wrapper.get_movie_pics(path_video)
                 elif root_type == 2 :   #电视目录下的视频
-                    pics = vfs_wrapper.get_episode_pics(path_video)
+                    se_info = pinyin_info.rip_se_info(video)
+                    if se_info is None :
+                        pics = vfs_wrapper.get_episode_pics(path_video, -1)
+                    else :
+                        pics = vfs_wrapper.get_episode_pics(path_video, se_info[0])
+
                 if pics is not None and len(pics) > 0 :
                     list_item.setArt(pics)
                 #url = os.path.join(root, video)             #直接nfs://路径格式
