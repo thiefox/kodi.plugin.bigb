@@ -134,6 +134,24 @@ class vfs_wrapper :
         file = path_pure + '-thumb.jpg'
         if xbmcvfs.exists(file) :
             pics['thumb'] = file
+
+        path_parent = os.path.split(path_pure)[0]
+        file = os.path.join(path_parent, 'clearlogo.png')
+        if xbmcvfs.exists(file) :
+            pics['clearlogo'] = file
+        else :
+            file = os.path.join(path_parent, 'clearlogo.jpg')
+            if xbmcvfs.exists(file) :
+                pics['clearlogo'] = file
+            else :
+                file = os.path.join(path_parent, 'logo.png')
+                if xbmcvfs.exists(file) :
+                    pics['clearlogo'] = file
+                else :
+                    file = os.path.join(path_parent, 'logo.jpg')
+                    if xbmcvfs.exists(file) :
+                        pics['clearlogo'] = file
+                        
         return pics        
 
     #path_name可以是目录，也可以是文件
